@@ -1,0 +1,552 @@
+openapi: 3.0.3
+info:
+  title: 'PBI-BTPNS-API'
+  description: 'Task 5 Project Based Virtual Internship with BTPN Syariah and Rakamin Academy Batch September 2023'
+  version: 1.0.0
+  contact:
+    name: 'Muhaimin Abdillah'
+    email: 'muhaiminabdillah85@gmail.com'
+servers:
+  - url: 'http://localhost:8080/api/v1'
+    description: 'Server for local development'
+  - url: 'http://dev.btpnsyariah.com/api/v1'
+    description: 'Server for development'
+  - url: 'http://prod.btpnsyariah.com/api/v1'
+    description: 'Server for production'
+paths:
+  /users:
+    post:
+      tags:
+        - 'Users'
+      security:
+        - ApiKey: []
+      summary: 'register new user'
+      requestBody:
+        $ref: '#/components/requestBodies/RegisterOrUpdateUser'
+      responses:
+        201:
+          $ref: '#/components/responses/RegisterUser'
+        400:
+          $ref: '#/components/responses/ValidationError'
+
+  /users/{userId}:
+    put:
+      tags:
+        - 'Users'
+      security:
+        - ApiKey: []
+        - JwtAuth: []
+      summary: 'update existing user'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        $ref: '#/components/schemas/RegisterOrUpdateRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/UpdateUser'
+        400:
+          $ref: '#/components/responses/ValidationError'
+
+    delete:
+      tags:
+        - 'Users'
+      security:
+        - ApiKey: []
+        - JwtAuth: []
+      summary: 'delete existing user (soft delete)'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      responses:
+        200:
+          description: 'success to delete user, deleted username and email cannot use to register new user'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              examples:
+                johndoe:
+                  value:
+                    status: 'success'
+                    code: 200
+                    message: 'success to delete user'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  /users/auth/login:
+    post:
+      tags:
+        - 'Authentications'
+      security:
+        - ApiKey: []
+      summary: 'login user'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              johndoe:
+                value:
+                  email: 'johndoe@example.com'
+                  password: 'JohXhy12mds'
+              btpns:
+                value:
+                  email: 'vix@btpnsyariah.com'
+                  password: 'V1x13tPn523'
+      responses:
+        200:
+          description: 'success to login'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Auth'
+              examples:
+                johndoe:
+                  value:
+                    status: 'success'
+                    code: 200
+                    data:
+                      accessToken: 'jwt access token given by server'
+                      refreshToken: 'jwt refresh token given by server'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+  /users/auth/logout:
+    delete:
+      tags:
+        - 'Authentications'
+      security:
+        - ApiKey: []
+        - JwtAuth: []
+      summary: 'logout user'
+      responses:
+        200:
+          description: 'success to logout'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              examples:
+                johndoe:
+                  value:
+                    status: 'success'
+                    code: 200
+                    message: 'success to logout user'
+
+  /users/auth/token:
+    put:
+      tags:
+        - 'Authentications'
+      security:
+        - ApiKey: [ ]
+        - JwtAuth: []
+      summary: 'update access token'
+      description: 'update access token using refresh token'
+      responses:
+        200:
+          description: 'success to update access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Auth'
+              examples:
+                johndoe:
+                  value:
+                    status: 'success'
+                    code: 200
+                    data:
+                      accessToken: 'jwt access token given by server'
+
+  /users/{userId}/photos/upload:
+    post:
+      tags:
+        - 'Upload'
+      security:
+        - ApiKey: []
+        - JwtAuth: []
+      summary: 'upload photo profile'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema:
+          image/png:
+            schema:
+      responses:
+        200:
+          description: 'success to upload photo'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              examples:
+                johndoe:
+                  value:
+                    status: 'success'
+                    code: 200
+                    data:
+                      id: 'img-asjjbaiyebclaj2i2qbs'
+
+  /users/{userId}/photos:
+    post:
+      tags:
+        - 'Photos'
+      security:
+        - ApiKey: [ ]
+        - JwtAuth: [ ]
+      summary: 'add identity for uploaded photo profile'
+      requestBody:
+        $ref: '#/components/requestBodies/UploadOrUpdatePhoto'
+      responses:
+        200:
+          description: 'success to add identity for uploaded photo'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              examples:
+                johndoe:
+                  value:
+                    status: 'success'
+                    code: 200
+                    data:
+                      id: 'photo-sjbfaiuwfbovsovaa'
+                      imgId: 'img-asjjbaiyebclaj2i2qbs'
+                      title: 'John Doe Profile"'
+                      caption: 'Yay, New Photo Profile'
+                      url: '/static/img-asjjbaiyebclaj2i2qbs.jpeg'
+
+  /users/{userId}/photos/{photoId}:
+    get:
+      tags:
+        - 'Photos'
+      security:
+        - ApiKey: [ ]
+        - JwtAuth: [ ]
+      summary: 'get detail for uploaded photo profile'
+      responses:
+        200:
+          description: 'success to get detail for uploaded photo'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              examples:
+                johndoe:
+                  value:
+                    status: 'success'
+                    code: 200
+                    data:
+                      id: 'photo-sjbfaiuwfbovsovaa'
+                      imgId: 'img-asjjbaiyebclaj2i2qbs'
+                      title: 'John Doe Profile"'
+                      caption: 'Yay, New Photo Profile'
+                      url: '/static/img-asjjbaiyebclaj2i2qbs.jpeg'
+    put:
+      tags:
+        - 'Photos'
+      security:
+        - ApiKey: [ ]
+        - JwtAuth: [ ]
+      summary: 'update identity for uploaded photo profile'
+      requestBody:
+        $ref: '#/components/requestBodies/UploadOrUpdatePhoto'
+      responses:
+        200:
+          description: 'success to update identity for uploaded photo'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              examples:
+                johndoe:
+                  value:
+                    status: 'success'
+                    code: 200
+                    data:
+                      id: 'photo-sjbfaiuwfbovsovaa'
+                      imgId: 'img-safajiubaiyebclaj2i2qbs'
+                      title: 'John Doe Updated Profile"'
+                      caption: 'Yay, New Updated Photo Profile'
+                      url: '/static/img-afajiubaiyebclaj2i2qbs.jpeg'
+    delete:
+      tags:
+        - 'Photos'
+      security:
+        - ApiKey: []
+        - JwtAuth: []
+      summary: 'delete photo profile (soft delete)'
+      responses:
+        200:
+          description: 'success to add identity for uploaded photo'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              examples:
+                johndoe:
+                  value:
+                    status: 'success'
+                    code: 200
+                    message: 'success to delete photo profile'
+  /static/{fileName}:
+    get:
+      tags:
+        - 'Static Content'
+      summary: 'get static content photo profile'
+      parameters:
+        - required: true
+          in: 'path'
+          name: fileName
+          description: 'image file name with extension file : jpeg or png'
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 25
+          examples:
+            johndoe:
+              value: 'img-afajiubaiyebclaj2i2qbs.jpeg'
+      responses:
+        200:
+          description: 'success to get static content uploaded photo'
+          content:
+            image/jpeg:
+              schema:
+            image/png:
+              schema:
+components:
+  securitySchemes:
+    ApiKey:
+      description: 'Must send API KEY for all request'
+      type: 'apiKey'
+      in: 'header'
+      name: 'X-API-KEY'
+    JwtAuth:
+      description: 'JWT token that you can get from login request'
+      type: 'http'
+      scheme: 'Bearer'
+
+  parameters:
+    userId:
+      required: true
+      in: 'path'
+      name: userId
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 25
+      examples:
+        johndoe:
+          value: 'user-Mhlkql8ask9adlnsLods'
+        btpns:
+          value: 'user-ksbaywbb8Odbwsls1'
+
+  requestBodies:
+    RegisterOrUpdateUser:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisterOrUpdateRequest'
+          examples:
+            johndoe:
+              value:
+                username: 'johndoe'
+                email: 'johndoe@example.com'
+                password: 'JohXhy12mds'
+            btpns:
+              value:
+                username: 'btpns'
+                email: 'vix@btpnsyariah.com'
+                password: 'V1x13tPn523'
+            rakamin:
+              value:
+                username: 'rakamin-academy'
+                email: 'support@rakamin.com'
+                password: 'Rak4m1n&23'
+
+    UploadOrUpdatePhoto:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: 'id photo that you get from upload photo request'
+                required: true
+                minLength: 1
+                maxLength: 50
+              title:
+                type: string
+                required: true
+                minLength: 1
+                maxLength: 20
+              caption:
+                type: string
+                required: true
+                minLength: 1
+                maxLength: 50
+          examples:
+            johndoe:
+              value:
+                id: 'img-asjjbaiyebclaj2i2qbs'
+                title: 'John Doe Profile'
+                caption: 'Yay, New Photo Profile '
+  responses:
+    RegisterUser:
+      description: 'success to register new user'
+      content:
+        application/json:
+         schema:
+           $ref: '#/components/schemas/Response'
+         examples:
+           johndoe:
+             value:
+               status: 'success'
+               code: 201
+               data:
+                 id: 'user-Mhlkql8ask9adlnsLods'
+                 username: 'johndoe'
+                 email: 'johndoe@example.com'
+           btpns:
+             value:
+                 status: 'success'
+                 code: 201
+                 data:
+                   id: 'user-ksbaywbb8Odbwsls1'
+                   username: 'btpns'
+                   email: 'vix@btpnsyariah.com'
+    UpdateUser:
+      description: 'success to update user'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          examples:
+            johndoe:
+              value:
+                status: 'success'
+                code: 201
+                data:
+                  id: 'user-Mhlkql8ask9adlnsLods'
+                  username: 'johndoe'
+                  email: 'johndoe@example.com'
+            btpns:
+              value:
+                status: 'success'
+                code: 201
+                data:
+                  id: 'user-ksbaywbb8Odbwsls1'
+                  username: 'btpns'
+                  email: 'vix@btpnsyariah.com'
+
+    ValidationError:
+      description: 'user input invalid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          examples:
+            emailNotValid:
+              value:
+                status: 'fail'
+                code: 400
+                message: 'email not valid'
+            emailAlreadyExist:
+              value:
+                status: 'fail'
+                code: 400
+                message: 'email already registered'
+    NotFoundError:
+      description: 'user input invalid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          examples:
+            userNotFound:
+              value:
+                status: 'fail'
+                code: 404
+                message: 'user not found'
+  schemas:
+    RegisterOrUpdateRequest:
+      type: object
+      properties:
+        username:
+          uniqueItems: true
+          type: string
+          required: true
+          minLength: 1
+          maxLength: 25
+        email:
+          uniqueItems: true
+          type: string
+          required: true
+          minLength: 3
+          maxLength: 50
+        password:
+          type: string
+          required: true
+          minLength: 6
+          maxLength: 50
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          required: true
+        username:
+          type: string
+          required: true
+        email:
+          type: string
+          required: true
+    Response:
+      type: object
+      properties:
+        status:
+          type: string
+          nullable: false
+          enum:
+            - 'success'
+            - 'fail'
+            - 'error'
+        code:
+          type: integer
+          nullable: false
+          format: 'int32'
+        message:
+          type: string
+          nullable: true
+        data:
+          type: object
+          description: 'can be object or array'
+          nullable: true
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          uniqueItems: true
+          type: string
+          required: true
+          minLength: 3
+          maxLength: 50
+        password:
+          type: string
+          required: true
+          minLength: 6
+          maxLength: 50
+    Auth:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          nullable: false
+        refreshToken:
+          type: string
+          nullable: false
