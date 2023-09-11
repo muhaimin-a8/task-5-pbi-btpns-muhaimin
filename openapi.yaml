@@ -40,7 +40,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/userId'
       requestBody:
-        $ref: '#/components/schemas/RegisterOrUpdateRequest'
+        $ref: '#/components/requestBodies/RegisterOrUpdateUser'
       responses:
         200:
           $ref: '#/components/responses/UpdateUser'
@@ -170,10 +170,13 @@ paths:
       requestBody:
         required: true
         content:
-          image/jpeg:
+          multipart/form-data:
             schema:
-          image/png:
-            schema:
+              type: object
+              properties:
+                image:
+                  type: file
+
       responses:
         200:
           description: 'success to upload photo'
@@ -374,9 +377,9 @@ components:
           schema:
             type: object
             properties:
-              id:
+              img_id:
                 type: string
-                description: 'id photo that you get from upload photo request'
+                description: 'img_id photo that you get from upload photo request'
                 required: true
                 minLength: 1
                 maxLength: 50
@@ -393,7 +396,7 @@ components:
           examples:
             johndoe:
               value:
-                id: 'img-asjjbaiyebclaj2i2qbs'
+                img_id: 'img-asjjbaiyebclaj2i2qbs'
                 title: 'John Doe Profile'
                 caption: 'Yay, New Photo Profile '
   responses:

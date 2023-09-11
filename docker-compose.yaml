@@ -1,0 +1,10 @@
+version: "3.0"
+services:
+  postgres:
+    container_name: postgres_vix_btpns
+    image: postgres:alpine3.18
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: 'postgres'
