@@ -24,8 +24,11 @@ func (a *authRepositoryImpl) AddToken(refreshToken string) error {
 
 func (a *authRepositoryImpl) DeleteToken(refreshToken string) error {
 	query := "DELETE FROM authentications WHERE refresh_token = $1"
-	_, err := a.db.Exec(query, refreshToken)
+	res, err := a.db.Exec(query, refreshToken)
 
+	if a, _ := res.RowsAffected(); a == 0 {
+		return errors.New("refreshToken found")
+	}
 	return err
 }
 

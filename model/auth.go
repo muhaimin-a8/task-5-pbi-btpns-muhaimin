@@ -15,7 +15,7 @@ type LogoutRequest struct {
 }
 
 type UpdateTokenRequest struct {
-	RefreshToken string `json:"access_token" validate:"required,min=1"`
+	RefreshToken string `json:"refresh_token" validate:"required,min=1"`
 }
 
 type UpdateTokenResponse struct {

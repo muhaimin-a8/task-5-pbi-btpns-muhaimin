@@ -62,7 +62,7 @@ func (a *authServiceImpl) Logout(logoutReq model.LogoutRequest) {
 
 	err = a.dao.NewAuthRepositroy().DeleteToken(logoutReq.RefreshToken)
 	if err != nil {
-		panic(err)
+		panic(exception.AuthenticationError{Msg: "invalid refreshToken"})
 	}
 }
 
