@@ -52,8 +52,8 @@ func (p *photoRepositoryImpl) DeletePhotoById(photoId string) error {
 }
 
 func (p *photoRepositoryImpl) UpdatePhoto(photo entity.Photo) (*entity.Photo, error) {
-	query := "UPDATE photos SET title = $1, caption = $2, url = $3 , updated_at = $4 RETURNING id, title, caption, url, user_id, created_at, updated_at"
-	rows, err := p.db.Query(query, photo.Title, photo.Caption, photo.Url, photo.UpdatedAt)
+	query := "UPDATE photos SET title = $1, caption = $2, url = $3 , updated_at = $4 WHERE id = $5 RETURNING id, title, caption, url, user_id, created_at, updated_at"
+	rows, err := p.db.Query(query, photo.Title, photo.Caption, photo.Url, photo.UpdatedAt, photo.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -65,8 +65,10 @@ func (p *photoRepositoryImpl) UpdatePhoto(photo entity.Photo) (*entity.Photo, er
 		if err != nil {
 			return nil, err
 		}
-	} else {
-		return nil, errors.New("photo Id not found")
+	}
+
+	if photoEntity.Id == "" {
+		return nil, errors.New("photoId not found")
 	}
 
 	return &photoEntity, err

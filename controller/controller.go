@@ -33,8 +33,10 @@ func (c *controllerImpl) NewAuthController() AuthController {
 }
 
 func (c *controllerImpl) NewPhotoController() PhotoController {
-	//TODO implement me
-	panic("implement me")
+	return &photoControllerImpl{
+		validate:     c.validate,
+		photoService: c.photoService,
+	}
 }
 
 func NewController(validate *validator.Validate,

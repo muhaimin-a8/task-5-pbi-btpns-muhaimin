@@ -111,9 +111,9 @@ func errorHandler(c *gin.Context, err any) {
 		return
 	}
 	if v, ok := err.(exception.NotFoundError); ok {
-		c.JSON(401, model.WebResponse{
+		c.JSON(404, model.WebResponse{
 			Status:  model.Fail,
-			Code:    401,
+			Code:    404,
 			Message: v.Msg,
 			Data:    nil,
 		})

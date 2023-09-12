@@ -24,9 +24,13 @@ func InitRouter(engine *gin.Engine, controllers controller.Controllers, middlewa
 	auth.DELETE("/logout", controllers.NewAuthController().Logout)
 	auth.PUT("/token", controllers.NewAuthController().UpdateAccessToken)
 
-	//PHOTOS
-	//photo := router.Group("/users/:userId/photos")
+	// PHOTOS
+	photos := users.Group("/:userId/photos")
+	photos.POST("/", controllers.NewPhotoController().AddPhoto)
+	photos.GET("/:photoId", controllers.NewPhotoController().GetPhoto)
+	photos.PUT("/:photoId", controllers.NewPhotoController().UpdatePhoto)
+	photos.DELETE("/:photoId", controllers.NewPhotoController().DeletePhoto)
 
 	// UPLOAD PHOTO
-	//photo.POST("/upload", controllers.NewPhotoControlle)
+	//photos.POST("/upload")
 }

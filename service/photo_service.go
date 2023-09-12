@@ -9,9 +9,9 @@ import (
 )
 
 type PhotoService interface {
-	AddPhoto(req model.AddPhotoRequest, userId string) *model.AddPhotoResponse
+	AddPhoto(req model.AddPhotoRequest) *model.AddPhotoResponse
 	GetPhotoById(photoId string, userId string) *model.GetPhotoResponse
-	UpdatePhoto(req model.UpdatePhotoRequest, userId string) *model.UpdatePhotoResponse
+	UpdatePhoto(req model.UpdatePhotoRequest) *model.UpdatePhotoResponse
 	DeletePhoto(photoId string, userId string)
 }
 
@@ -20,13 +20,13 @@ type photoServiceImpl struct {
 	idGenerator IdGenerator
 }
 
-func (p *photoServiceImpl) AddPhoto(req model.AddPhotoRequest, userId string) *model.AddPhotoResponse {
+func (p *photoServiceImpl) AddPhoto(req model.AddPhotoRequest) *model.AddPhotoResponse {
 	photo := entity.Photo{
 		Id:        "photo-" + p.idGenerator.New(20),
 		Title:     req.Title,
 		Caption:   req.Caption,
 		Url:       req.ImgId,
-		UserId:    userId,
+		UserId:    req.UserId,
 		CreatedAt: time.Now().Unix(),
 		UpdatedAt: time.Now().Unix(),
 	}
@@ -45,18 +45,64 @@ func (p *photoServiceImpl) AddPhoto(req model.AddPhotoRequest, userId string) *m
 }
 
 func (p *photoServiceImpl) GetPhotoById(photoId string, userId string) *model.GetPhotoResponse {
-	//TODO implement me
-	panic("implement me")
+	photo, err := p.dao.NewPhotoRepository().GetPhotoById(photoId)
+	if err != nil {
+		panic(exception.NotFoundError{Msg: "photoId Not Found"})
+	}
+
+	// check owner
+	if photo.UserId != userId {
+		panic(exception.AuthorizationError{Msg: "cannot get other photo"})
+	}
+
+	return &model.GetPhotoResponse{
+		Id:      photo.Id,
+		Title:   photo.Title,
+		Caption: photo.Caption,
+		Url:     "/static/photos/" + photo.Url,
+	}
 }
 
-func (p *photoServiceImpl) UpdatePhoto(req model.UpdatePhotoRequest, userId string) *model.UpdatePhotoResponse {
-	//TODO implement me
-	panic("implement me")
+func (p *photoServiceImpl) UpdatePhoto(req model.UpdatePhotoRequest) *model.UpdatePhotoResponse {
+	photoReq := entity.Photo{
+		Id:        req.Id,
+		Title:     req.Title,
+		Caption:   req.Caption,
+		Url:       req.ImgId,
+		UserId:    req.UserId,
+		UpdatedAt: time.Now().Unix(),
+	}
+
+	photo, err := p.dao.NewPhotoRepository().UpdatePhoto(photoReq)
+	if err != nil {
+		panic(exception.NotFoundError{Msg: "photoId not found"})
+	}
+
+	return &model.UpdatePhotoResponse{
+		Id:      photo.Id,
+		Title:   photo.Title,
+		Caption: photo.Caption,
+		Url:     "/static/photos/" + photo.Url,
+	}
 }
 
 func (p *photoServiceImpl) DeletePhoto(photoId string, userId string) {
-	//TODO implement me
-	panic("implement me")
+	photo, err := p.dao.NewPhotoRepository().GetPhotoById(photoId)
+	if err != nil {
+		panic(exception.NotFoundError{Msg: "photoId Not Found"})
+	}
+
+	// check owner
+	if photo.UserId != userId {
+		panic(exception.AuthorizationError{Msg: "cannot delete other photo"})
+	}
+
+	err = p.dao.NewPhotoRepository().DeletePhotoById(photoId)
+	if err != nil {
+		panic(exception.NotFoundError{Msg: "photoId Not Found"})
+	}
+
+	return
 }
 
 func NewPhotoService(dao repository.DAO, generator IdGenerator) PhotoService {
