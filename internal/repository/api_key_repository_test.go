@@ -29,5 +29,5 @@ func Test_apiKeyRepositoryImpl_VerifyKeyIsExist(t *testing.T) {
 func Test_apiKeyRepositoryImpl_VerifyKeyIsExist_KeyNotFound(t *testing.T) {
 	err := apiKeyRepository.VerifyKeyIsExist("not-found-key")
 	assert.NotEmpty(t, err)
-	assert.Equal(t, errors.New("api key not found"), err)
+	assert.Equal(t, errors.New("api key does not exists"), err)
 }
