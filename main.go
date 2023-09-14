@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
+	"io"
 	"log"
 	"os"
 	"pbi-btpns-api/internal/app"
@@ -65,7 +66,18 @@ func main() {
 
 	if stage == "production" {
 		gin.SetMode(gin.ReleaseMode)
+
+		// write log files
+		err = os.MkdirAll("./logs", os.ModePerm)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		file, _ := os.Create("./logs/app.log")
+		errLog, _ := os.Create("./logs/error.log")
+		gin.DefaultWriter = io.MultiWriter(file)
+		gin.DefaultErrorWriter = io.MultiWriter(errLog)
 	}
+
 	engine := gin.New()
 	engine.Use(gin.CustomRecovery(app.ErrorHandler))
 

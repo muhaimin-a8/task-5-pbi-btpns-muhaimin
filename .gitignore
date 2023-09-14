@@ -2,3 +2,5 @@
 /config/config.yaml
 build/
 /public/uploads
+
+logs/
