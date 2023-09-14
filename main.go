@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
 	"log"
+	"os"
 	"pbi-btpns-api/internal/app"
 	"pbi-btpns-api/internal/controller"
 	"pbi-btpns-api/internal/middleware"
@@ -21,7 +23,7 @@ func main() {
 	}
 
 	//db
-	db, err := app.NewDB()
+	db, err := app.NewDB(app.Production)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -56,13 +58,19 @@ func main() {
 	// middlewares
 	middlewares := middleware.NewMiddlewares(tokenManager)
 
-	//routes
+	// server
+	port := viper.Get("server.port").(int)
+	stage := os.Getenv("STAGE")
 
+	if stage == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	engine := gin.New()
 	engine.Use(gin.CustomRecovery(app.ErrorHandler))
 
 	router.InitRouter(engine, controllers, middlewares)
-	err = engine.Run(":8080")
+
+	err = engine.Run(fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalln(err)
 	}

@@ -4,29 +4,29 @@ import (
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"log"
-	app2 "pbi-btpns-api/internal/app"
+	"pbi-btpns-api/internal/app"
 	"pbi-btpns-api/internal/entity"
-	test2 "pbi-btpns-api/internal/test"
+	"pbi-btpns-api/internal/test"
 	"testing"
 	"time"
 )
 
-var userTableTestHelper *test2.UserTableTestHelper
-var authTableTestHelper *test2.AuthTableTestHelper
-var photoTableTestHelper *test2.PhotoTableTestHelper
+var userTableTestHelper *test.UserTableTestHelper
+var authTableTestHelper *test.AuthTableTestHelper
+var photoTableTestHelper *test.PhotoTableTestHelper
 var userRepository UserRepository
 var authRepository AuthRepository
 var photoRepository PhotoRepository
 
 func TestMain(m *testing.M) {
 	//load config
-	err := app2.LoadConfig("../../config")
+	err := app.LoadConfig("../../config")
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	// setup db
-	db, err := app2.NewDB()
+	db, err := app.NewDB(app.Test)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -38,9 +38,9 @@ func TestMain(m *testing.M) {
 	}
 
 	// setup test helper
-	userTableTestHelper = test2.NewUserTableTestHelper(db)
-	authTableTestHelper = test2.NewAuthTableTestHelper(db)
-	photoTableTestHelper = test2.NewPhotoTableTestHelper(db)
+	userTableTestHelper = test.NewUserTableTestHelper(db)
+	authTableTestHelper = test.NewAuthTableTestHelper(db)
+	photoTableTestHelper = test.NewPhotoTableTestHelper(db)
 
 	// setup repository instance
 	userRepository = &userRepositoryImpl{db: db}

@@ -1,5 +1,18 @@
 version: "3.0"
 services:
+  pbi_btpns_api:
+      build: ./
+      ports:
+        - 8080:8080
+      depends_on:
+        - db
+      networks:
+        - fullstack
+      environment:
+        - PGHOST=db
+        - PGDATABASE=postgres
+        - PGUSER=postgres
+        - PGPASSWORD=postgres
   postgres:
     container_name: postgres_vix_btpns
     image: postgres:alpine3.18

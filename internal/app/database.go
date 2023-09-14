@@ -5,11 +5,10 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
-	"os"
 	"time"
 )
 
-func NewDB() (*sql.DB, error) {
+func NewDB(stage Stage) (*sql.DB, error) {
 	var host string
 	var port int
 	var dbname string
@@ -17,7 +16,7 @@ func NewDB() (*sql.DB, error) {
 	var pass string
 	var sslmode string
 
-	if e := os.Getenv("STAGE"); e == "production" {
+	if stage == "production" {
 		// db config for production
 		host = viper.Get("database.postgres.host").(string)
 		port = viper.Get("database.postgres.port").(int)
@@ -54,3 +53,12 @@ func NewDB() (*sql.DB, error) {
 
 	return db, nil
 }
+
+type Stage string
+
+const (
+	// Production : use for production for real users
+	Production Stage = "production"
+	// Test : user for local development
+	Test Stage = "test"
+)
