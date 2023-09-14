@@ -7,14 +7,14 @@ info:
     name: 'Muhaimin Abdillah'
     email: 'muhaiminabdillah85@gmail.com'
 servers:
-  - url: 'http://localhost:8080/api/v1'
+  - url: 'http://localhost:8080/'
     description: 'Server for local development'
-  - url: 'http://dev.btpnsyariah.com/api/v1'
+  - url: 'http://dev.btpnsyariah.com/'
     description: 'Server for development'
-  - url: 'http://prod.btpnsyariah.com/api/v1'
+  - url: 'http://prod.btpnsyariah.com/'
     description: 'Server for production'
 paths:
-  /users:
+  /api/v1/users:
     post:
       tags:
         - 'Users'
@@ -29,7 +29,7 @@ paths:
         400:
           $ref: '#/components/responses/ValidationError'
 
-  /users/{userId}:
+  /api/v1/users/{userId}:
     put:
       tags:
         - 'Users'
@@ -72,7 +72,7 @@ paths:
         404:
           $ref: '#/components/responses/NotFoundError'
 
-  /users/auth/login:
+  /api/v1/users/auth/login:
     post:
       tags:
         - 'Authentications'
@@ -111,7 +111,7 @@ paths:
                       refreshToken: 'jwt refresh token given by server'
         404:
           $ref: '#/components/responses/NotFoundError'
-  /users/auth/logout:
+  /api/v1/users/auth/logout:
     delete:
       tags:
         - 'Authentications'
@@ -133,7 +133,7 @@ paths:
                     code: 200
                     message: 'success to logout user'
 
-  /users/auth/token:
+  /api/v1/users/auth/token:
     put:
       tags:
         - 'Authentications'
@@ -157,42 +157,7 @@ paths:
                     data:
                       accessToken: 'jwt access token given by server'
 
-  /users/{userId}/photos/upload:
-    post:
-      tags:
-        - 'Upload'
-      security:
-        - ApiKey: []
-        - JwtAuth: []
-      summary: 'upload photo profile'
-      parameters:
-        - $ref: '#/components/parameters/userId'
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                image:
-                  type: file
-
-      responses:
-        200:
-          description: 'success to upload photo'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Response'
-              examples:
-                johndoe:
-                  value:
-                    status: 'success'
-                    code: 200
-                    data:
-                      id: 'img-asjjbaiyebclaj2i2qbs'
-
-  /users/{userId}/photos:
+  /api/v1/users/{userId}/photos:
     post:
       tags:
         - 'Photos'
@@ -221,7 +186,7 @@ paths:
                       caption: 'Yay, New Photo Profile'
                       url: '/static/img-asjjbaiyebclaj2i2qbs.jpeg'
 
-  /users/{userId}/photos/{photoId}:
+  /api/v1/users/{userId}/photos/{photoId}:
     get:
       tags:
         - 'Photos'
@@ -294,6 +259,38 @@ paths:
                     status: 'success'
                     code: 200
                     message: 'success to delete photo profile'
+
+  /uploads/photos:
+    post:
+      tags:
+        - 'Upload'
+      summary: 'upload photo profile'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: file
+
+      responses:
+        200:
+          description: 'success to upload photo'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              examples:
+                johndoe:
+                  value:
+                    status: 'success'
+                    code: 200
+                    data:
+                      url : '/static/photos/075bf988-681b-4df1-b3b7-222eb0ba4d45.png'
   /static/{fileName}:
     get:
       tags:
@@ -303,14 +300,14 @@ paths:
         - required: true
           in: 'path'
           name: fileName
-          description: 'image file name with extension file : jpeg or png'
+          description: 'image file name with extension file : jpg, jpeg or png'
           schema:
             type: string
             minLength: 1
             maxLength: 25
           examples:
-            johndoe:
-              value: 'img-afajiubaiyebclaj2i2qbs.jpeg'
+            image:
+              value: '075bf988-681b-4df1-b3b7-222eb0ba4d45.png'
       responses:
         200:
           description: 'success to get static content uploaded photo'
@@ -377,12 +374,6 @@ components:
           schema:
             type: object
             properties:
-              img_id:
-                type: string
-                description: 'img_id photo that you get from upload photo request'
-                required: true
-                minLength: 1
-                maxLength: 50
               title:
                 type: string
                 required: true
@@ -393,6 +384,12 @@ components:
                 required: true
                 minLength: 1
                 maxLength: 50
+              url:
+                type: string
+                description: 'url photo that you get from upload photo request'
+                required: true
+                minLength: 1
+                maxLength: 100
           examples:
             johndoe:
               value:
