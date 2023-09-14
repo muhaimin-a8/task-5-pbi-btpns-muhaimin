@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+database:
+  # database for production stage
+  postgres:
+    host:
+    port: 5432
+    dbname:
+    user:
+    pass:
+    sslmode:
+
+  # database for test stage
+  postgresTest:
+    host:
+    port:
+    dbname:
+    user:
+    pass:
+    sslmode: 'disable'
+
+  # configure database connection pool
+  pool:
+    maxIdle: 10
+    maxOpen: 90
+    maxIdleTime: 360 # in seconds
+    maxLifeTime: 36000 # in seconds
+jwt:
+  key:
+  # expiration for access token in seconds
+  exp:
+  refreshKey:
+  # expiration for refresh token in seconds
+  refreshExp:
