@@ -90,10 +90,6 @@ paths:
                 value:
                   email: 'johndoe@example.com'
                   password: 'JohXhy12mds'
-              btpns:
-                value:
-                  email: 'vix@btpnsyariah.com'
-                  password: 'V1x13tPn523'
       responses:
         200:
           description: 'success to login'
@@ -360,8 +356,6 @@ components:
       examples:
         johndoe:
           value: 'user-Mhlkql8ask9adlnsLods'
-        btpns:
-          value: 'user-ksbaywbb8Odbwsls1'
 
   requestBodies:
     RegisterOrUpdateUser:
@@ -376,16 +370,6 @@ components:
                 username: 'johndoe'
                 email: 'johndoe@example.com'
                 password: 'JohXhy12mds'
-            btpns:
-              value:
-                username: 'btpns'
-                email: 'vix@btpnsyariah.com'
-                password: 'V1x13tPn523'
-            rakamin:
-              value:
-                username: 'rakamin-academy'
-                email: 'support@rakamin.com'
-                password: 'Rak4m1n&23'
 
     UploadOrUpdatePhoto:
       required: true
@@ -432,14 +416,6 @@ components:
                  id: 'user-Mhlkql8ask9adlnsLods'
                  username: 'johndoe'
                  email: 'johndoe@example.com'
-           btpns:
-             value:
-                 status: 'success'
-                 code: 201
-                 data:
-                   id: 'user-ksbaywbb8Odbwsls1'
-                   username: 'btpns'
-                   email: 'vix@btpnsyariah.com'
     UpdateUser:
       description: 'success to update user'
       content:
@@ -455,14 +431,6 @@ components:
                   id: 'user-Mhlkql8ask9adlnsLods'
                   username: 'johndoe'
                   email: 'johndoe@example.com'
-            btpns:
-              value:
-                status: 'success'
-                code: 201
-                data:
-                  id: 'user-ksbaywbb8Odbwsls1'
-                  username: 'btpns'
-                  email: 'vix@btpnsyariah.com'
 
     ValidationError:
       description: 'user input invalid'
