@@ -316,6 +316,25 @@ paths:
               schema:
             image/png:
               schema:
+  /api-keys/register:
+    post:
+      tags:
+        - 'API KEY'
+      summary: 'register new api key'
+      responses:
+        200:
+          description: 'success to register new api key'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+              examples:
+                api_key:
+                  value:
+                    key: 'sdklnasnaiof aocabo'
 components:
   securitySchemes:
     ApiKey:

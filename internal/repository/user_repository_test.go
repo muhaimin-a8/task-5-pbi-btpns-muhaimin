@@ -14,9 +14,11 @@ import (
 var userTableTestHelper *test.UserTableTestHelper
 var authTableTestHelper *test.AuthTableTestHelper
 var photoTableTestHelper *test.PhotoTableTestHelper
+var apiKeyTableTestHelper *test.ApiKeyTableTestHelper
 var userRepository UserRepository
 var authRepository AuthRepository
 var photoRepository PhotoRepository
+var apiKeyRepository ApiKeyRepository
 
 func TestMain(m *testing.M) {
 	//load config
@@ -41,11 +43,13 @@ func TestMain(m *testing.M) {
 	userTableTestHelper = test.NewUserTableTestHelper(db)
 	authTableTestHelper = test.NewAuthTableTestHelper(db)
 	photoTableTestHelper = test.NewPhotoTableTestHelper(db)
+	apiKeyTableTestHelper = test.NewApiKeyTableTestHelper(db)
 
 	// setup repository instance
 	userRepository = &userRepositoryImpl{db: db}
 	authRepository = &authRepositoryImpl{db: db}
 	photoRepository = &photoRepositoryImpl{db: db}
+	apiKeyRepository = &apiKeyRepositoryImpl{db: db}
 
 	// run all test cases
 	m.Run()

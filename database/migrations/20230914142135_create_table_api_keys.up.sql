@@ -1,0 +1,3 @@
+CREATE TABLE api_keys(
+    key VARCHAR(256) NOT NULL
+)

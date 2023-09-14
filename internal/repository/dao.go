@@ -6,10 +6,16 @@ type DAO interface {
 	NewUserRepository() UserRepository
 	NewAuthRepositroy() AuthRepository
 	NewPhotoRepository() PhotoRepository
+
+	NewApiKeyRepository() ApiKeyRepository
 }
 
 type daoImpl struct {
 	db *sql.DB
+}
+
+func (d *daoImpl) NewApiKeyRepository() ApiKeyRepository {
+	return &apiKeyRepositoryImpl{db: d.db}
 }
 
 func (d *daoImpl) NewPhotoRepository() PhotoRepository {

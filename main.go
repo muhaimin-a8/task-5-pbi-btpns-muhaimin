@@ -50,13 +50,14 @@ func main() {
 	userService := service.NewUserService(dao, idGenerator, hasher)
 	authService := service.NewAuthService(dao, hasher, tokenManager)
 	photoService := service.NewPhotoService(dao, idGenerator)
+	apiKeyService := service.NewApiKeyService(dao, idGenerator)
 
 	// controller
 	validate := validator.New()
-	controllers := controller.NewController(validate, userService, authService, photoService)
+	controllers := controller.NewController(validate, userService, authService, photoService, apiKeyService)
 
 	// middlewares
-	middlewares := middleware.NewMiddlewares(tokenManager)
+	middlewares := middleware.NewMiddlewares(tokenManager, apiKeyService)
 
 	// server
 	port := viper.Get("server.port").(int)

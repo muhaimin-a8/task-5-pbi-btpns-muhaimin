@@ -3,21 +3,22 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"pbi-btpns-api/internal/model"
+	"pbi-btpns-api/internal/service"
 )
 
 func (a *apiKeyMiddleware) Init(c *gin.Context) {
 	apiKey := c.GetHeader("X-API-KEY")
-	if apiKey != "SECRET_API_KEY" {
+	isExist := a.apiKeyService.IsExist(apiKey)
+	if !isExist {
 		c.AbortWithStatusJSON(401, model.WebResponse{
 			Status:  model.Fail,
 			Code:    401,
-			Message: "invalid API KEY",
+			Message: "Invalid API KEY",
 			Data:    nil,
 		})
 	}
-
-	c.Next()
 }
 
 type apiKeyMiddleware struct {
+	apiKeyService service.ApiKeyService
 }

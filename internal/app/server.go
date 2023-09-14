@@ -67,11 +67,12 @@ func ErrorHandler(c *gin.Context, err any) {
 	}
 
 	// INTERNAL SERVER ERROR
+	// TODO write error log file
+
 	c.JSON(500, model.WebResponse{
 		Status:  model.Error,
 		Code:    500,
 		Message: "Internal Server Error",
 		Data:    nil,
 	})
-
 }

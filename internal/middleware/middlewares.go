@@ -6,23 +6,25 @@ import (
 
 type Middlewares interface {
 	NewJwtAuth() JwtAuthMiddleware
-	NewApiKey() *apiKeyMiddleware
+	NewApiKeyAuth() *apiKeyMiddleware
 }
 
 type middlewaresImpl struct {
-	tokenManager service.JwtTokenManager
+	tokenManager  service.JwtTokenManager
+	apiKeyService service.ApiKeyService
 }
 
 func (m *middlewaresImpl) NewJwtAuth() JwtAuthMiddleware {
 	return &jwtAuthMiddleware{tokenManager: m.tokenManager}
 }
 
-func (m *middlewaresImpl) NewApiKey() *apiKeyMiddleware {
-	return &apiKeyMiddleware{}
+func (m *middlewaresImpl) NewApiKeyAuth() *apiKeyMiddleware {
+	return &apiKeyMiddleware{apiKeyService: m.apiKeyService}
 }
 
-func NewMiddlewares(tokenManager service.JwtTokenManager) Middlewares {
+func NewMiddlewares(tokenManager service.JwtTokenManager, apiKeyService service.ApiKeyService) Middlewares {
 	return &middlewaresImpl{
-		tokenManager: tokenManager,
+		tokenManager:  tokenManager,
+		apiKeyService: apiKeyService,
 	}
 }

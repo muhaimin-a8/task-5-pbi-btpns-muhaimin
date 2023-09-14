@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"pbi-btpns-api/internal/model"
 	"pbi-btpns-api/internal/service"
@@ -40,13 +39,9 @@ func (j *jwtAuthMiddleware) Init(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(userId)
-
 	c.Set("credentials", map[string]string{
 		"userId": *userId,
 	})
-
-	c.Next()
 }
 
 func getTokenFromHeader(tokenHeader string) string {
