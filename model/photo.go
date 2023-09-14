@@ -2,9 +2,9 @@ package model
 
 type AddPhotoRequest struct {
 	UserId  string
-	ImgId   string `json:"img_id" validate:"required,min=1,max=50"`
 	Title   string `json:"title" validate:"required,min=1,max=20"`
 	Caption string `json:"caption" validate:"required,min=1,max=50"`
+	Url     string `json:"url" validate:"required,min=1,max=100"`
 }
 
 type AddPhotoResponse struct {
@@ -24,7 +24,7 @@ type GetPhotoResponse struct {
 type UpdatePhotoRequest struct {
 	Id      string
 	UserId  string
-	ImgId   string `json:"img_id" validate:"required,min=1,max=50"`
+	Url     string `json:"img_id" validate:"required,min=1,max=100"`
 	Title   string `json:"title" validate:"required,min=1,max=20"`
 	Caption string `json:"caption" validate:"required,min=1,max=50"`
 }

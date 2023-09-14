@@ -51,7 +51,6 @@ func main() {
 
 	engine := gin.New()
 	engine.Use(gin.CustomRecovery(errorHandler))
-	engine.Use(middlewares.NewApiKey().Init)
 
 	router.InitRouter(engine, controllers, middlewares)
 	err := engine.Run(":8080")

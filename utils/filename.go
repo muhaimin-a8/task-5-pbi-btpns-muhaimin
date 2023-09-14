@@ -7,3 +7,9 @@ func GetFileExtension(fileName string) string {
 
 	return split[len(split)-1]
 }
+
+func GetFileNameFromUrl(url string) string {
+	split := strings.Split(url, "/")
+
+	return split[len(split)-1]
+}

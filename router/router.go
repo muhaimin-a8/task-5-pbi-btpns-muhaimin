@@ -8,7 +8,7 @@ import (
 
 func InitRouter(engine *gin.Engine, controllers controller.Controllers, middlewares middleware.Middlewares) {
 	router := engine.Group("/api/v1")
-	//router.Use(middleware.ApiKeyAuth)
+	router.Use(middlewares.NewApiKey().Init)
 
 	// USERS
 	users := router.Group("/users")
@@ -32,5 +32,9 @@ func InitRouter(engine *gin.Engine, controllers controller.Controllers, middlewa
 	photos.DELETE("/:photoId", controllers.NewPhotoController().DeletePhoto)
 
 	// UPLOAD PHOTO
-	//photos.POST("/upload")
+	upload := engine.Group("/uploads")
+	upload.POST("/photos", controllers.NewUploadController().UploadPhoto)
+
+	// GET STATIC CONTENT
+	engine.Static("/static/photos/", "./public/uploads/photos/")
 }

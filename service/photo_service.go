@@ -25,7 +25,7 @@ func (p *photoServiceImpl) AddPhoto(req model.AddPhotoRequest) *model.AddPhotoRe
 		Id:        "photo-" + p.idGenerator.New(20),
 		Title:     req.Title,
 		Caption:   req.Caption,
-		Url:       req.ImgId,
+		Url:       req.Url,
 		UserId:    req.UserId,
 		CreatedAt: time.Now().Unix(),
 		UpdatedAt: time.Now().Unix(),
@@ -68,7 +68,7 @@ func (p *photoServiceImpl) UpdatePhoto(req model.UpdatePhotoRequest) *model.Upda
 		Id:        req.Id,
 		Title:     req.Title,
 		Caption:   req.Caption,
-		Url:       req.ImgId,
+		Url:       req.Url,
 		UserId:    req.UserId,
 		UpdatedAt: time.Now().Unix(),
 	}

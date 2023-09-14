@@ -6,6 +6,7 @@ import (
 	"pbi-btpns-api/exception"
 	"pbi-btpns-api/model"
 	"pbi-btpns-api/service"
+	"pbi-btpns-api/utils"
 )
 
 type PhotoController interface {
@@ -46,6 +47,7 @@ func (p *photoControllerImpl) AddPhoto(c *gin.Context) {
 	}
 
 	req.UserId = userId
+	req.Url = utils.GetFileNameFromUrl(req.Url)
 
 	// logout
 	response := p.photoService.AddPhoto(req)
@@ -86,6 +88,7 @@ func (p *photoControllerImpl) UpdatePhoto(c *gin.Context) {
 
 	req.Id = photoId
 	req.UserId = userId
+	req.Url = utils.GetFileNameFromUrl(req.Url)
 
 	// logout
 	response := p.photoService.UpdatePhoto(req)

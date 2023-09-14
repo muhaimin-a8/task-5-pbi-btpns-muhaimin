@@ -9,6 +9,7 @@ type Controllers interface {
 	NewUserController() UserController
 	NewAuthController() AuthController
 	NewPhotoController() PhotoController
+	NewUploadController() UploadController
 }
 
 type controllerImpl struct {
@@ -16,6 +17,10 @@ type controllerImpl struct {
 	userService  service.UserService
 	authService  service.AuthService
 	photoService service.PhotoService
+}
+
+func (c *controllerImpl) NewUploadController() UploadController {
+	return &uploadControllerImpl{}
 }
 
 func (c *controllerImpl) NewUserController() UserController {
