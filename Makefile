@@ -1,5 +1,5 @@
 # postgres://{username}:{password}@{host}:{port}/postgres?sslmode=disable
-psqlUri = "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable"
+psqlUri = ""
 
 run:
 	go run main.go
