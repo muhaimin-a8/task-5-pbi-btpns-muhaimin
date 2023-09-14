@@ -275,7 +275,8 @@ paths:
               type: object
               properties:
                 image:
-                  type: file
+                  type: string
+                  format: binary
 
       responses:
         200:
