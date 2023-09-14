@@ -4,8 +4,14 @@ WORKDIR app
 COPY . .
 
 RUN go mod download
-RUN go build -o ./pbi-btpns-api:v1.0.0
+RUN go build -o ./build/pbi-btpns-api:v1.0.0
 
-FROM golang:1.20-alpine as publisher
-WORKDIR app
-COPY --from=builder
+FROM scratch
+
+ENV STAGE=production
+
+WORKDIR /
+COPY --from=builder ./build/pbi-btpns-api:v1.0.0 ./pbi-btpns-api:v1.0.0
+
+EXPOSE 8080
+ENTRYPOINT ["./pbi-btpns-api:v1.0.0"]

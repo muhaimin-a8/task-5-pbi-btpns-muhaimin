@@ -5,19 +5,21 @@ services:
       ports:
         - "8080:8080"
       depends_on:
-        - db
+        - postgres
       networks:
-        - fullstack
+        - postgres_pbi_btpns_api
       environment:
         - PGHOST=db
         - PGDATABASE=postgres
         - PGUSER=postgres
         - PGPASSWORD=postgres
   postgres:
-    container_name: postgres_vix_btpns
+    container_name: postgres_pbi_btpns_api
     image: postgres:alpine3.18
     restart: on-failure
     ports:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: 'postgres'
+networks:
+  postgres_pbi_btpns_api:
