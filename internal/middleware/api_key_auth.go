@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"pbi-btpns-api/model"
+	"pbi-btpns-api/internal/model"
 )
 
 func (a *apiKeyMiddleware) Init(c *gin.Context) {

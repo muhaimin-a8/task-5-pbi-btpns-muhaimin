@@ -2,8 +2,8 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"pbi-btpns-api/controller"
-	"pbi-btpns-api/middleware"
+	"pbi-btpns-api/internal/controller"
+	"pbi-btpns-api/internal/middleware"
 )
 
 func InitRouter(engine *gin.Engine, controllers controller.Controllers, middlewares middleware.Middlewares) {

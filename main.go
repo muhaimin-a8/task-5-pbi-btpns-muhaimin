@@ -5,23 +5,32 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
 	"log"
-	"pbi-btpns-api/app"
-	"pbi-btpns-api/controller"
-	"pbi-btpns-api/database"
-	"pbi-btpns-api/exception"
-	"pbi-btpns-api/middleware"
-	"pbi-btpns-api/model"
-	"pbi-btpns-api/repository"
-	"pbi-btpns-api/router"
-	"pbi-btpns-api/service"
+	"pbi-btpns-api/internal/app"
+	"pbi-btpns-api/internal/controller"
+	"pbi-btpns-api/internal/middleware"
+	"pbi-btpns-api/internal/repository"
+	"pbi-btpns-api/internal/router"
+	"pbi-btpns-api/internal/service"
 )
 
 func main() {
 	// load env
-	app.LoadConfig()
+	err := app.LoadConfig("config")
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	//db
-	db, _ := database.NewDB()
+	db, err := app.NewDB()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// check db connection
+	err = db.Ping()
+	if err != nil {
+		log.Fatalf("Can't connect to database => %v\n", err)
+	}
 
 	//dao
 	dao := repository.NewDAO(db)
@@ -50,80 +59,11 @@ func main() {
 	//routes
 
 	engine := gin.New()
-	engine.Use(gin.CustomRecovery(errorHandler))
+	engine.Use(gin.CustomRecovery(app.ErrorHandler))
 
 	router.InitRouter(engine, controllers, middlewares)
-	err := engine.Run(":8080")
+	err = engine.Run(":8080")
 	if err != nil {
 		log.Fatalln(err)
 	}
-}
-
-func errorHandler(c *gin.Context, err any) {
-	if v, ok := err.(exception.ValidationError); ok {
-		c.JSON(400, model.WebResponse{
-			Status:  model.Fail,
-			Code:    400,
-			Message: v.Msg,
-			Data:    nil,
-		})
-		return
-	}
-
-	if v, ok := err.(exception.JsonParseError); ok {
-		c.JSON(400, model.WebResponse{
-			Status:  model.Fail,
-			Code:    400,
-			Message: v.Msg,
-			Data:    nil,
-		})
-		return
-	}
-
-	if v, ok := err.(exception.InvariantError); ok {
-		c.JSON(400, model.WebResponse{
-			Status:  model.Fail,
-			Code:    400,
-			Message: v.Msg,
-			Data:    nil,
-		})
-		return
-	}
-
-	if v, ok := err.(exception.AuthenticationError); ok {
-		c.JSON(401, model.WebResponse{
-			Status:  model.Fail,
-			Code:    401,
-			Message: v.Msg,
-			Data:    nil,
-		})
-		return
-	}
-
-	if v, ok := err.(exception.AuthorizationError); ok {
-		c.JSON(401, model.WebResponse{
-			Status:  model.Fail,
-			Code:    401,
-			Message: v.Msg,
-			Data:    nil,
-		})
-		return
-	}
-	if v, ok := err.(exception.NotFoundError); ok {
-		c.JSON(404, model.WebResponse{
-			Status:  model.Fail,
-			Code:    404,
-			Message: v.Msg,
-			Data:    nil,
-		})
-		return
-	}
-
-	// INTERNAL SERVER ERROR
-	c.JSON(500, model.WebResponse{
-		Status:  model.Error,
-		Code:    500,
-		Message: "Internal Server Error",
-		Data:    nil,
-	})
 }

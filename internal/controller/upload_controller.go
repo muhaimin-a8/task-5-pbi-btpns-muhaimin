@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"pbi-btpns-api/exception"
-	"pbi-btpns-api/model"
-	"pbi-btpns-api/utils"
+	"pbi-btpns-api/internal/exception"
+	model2 "pbi-btpns-api/internal/model"
+	"pbi-btpns-api/internal/utils"
 )
 
 type UploadController interface {
@@ -37,11 +37,11 @@ func (u *uploadControllerImpl) UploadPhoto(c *gin.Context) {
 		panic(err)
 	}
 
-	c.JSON(200, model.WebResponse{
-		Status:  model.Success,
+	c.JSON(200, model2.WebResponse{
+		Status:  model2.Success,
 		Code:    200,
 		Message: "Yay, success to add new photo",
-		Data: model.UploadPhotoResponse{
+		Data: model2.UploadPhotoResponse{
 			Url: fmt.Sprintf("/static/photos/%s.%s", id, extension),
 		},
 	})

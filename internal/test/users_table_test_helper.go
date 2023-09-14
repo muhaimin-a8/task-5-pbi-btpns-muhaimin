@@ -2,7 +2,7 @@ package test
 
 import (
 	"database/sql"
-	"pbi-btpns-api/entity"
+	"pbi-btpns-api/internal/entity"
 )
 
 type UserTableTestHelper struct {

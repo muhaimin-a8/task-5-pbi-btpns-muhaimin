@@ -1,6 +1,8 @@
 package middleware
 
-import "pbi-btpns-api/service"
+import (
+	"pbi-btpns-api/internal/service"
+)
 
 type Middlewares interface {
 	NewJwtAuth() JwtAuthMiddleware

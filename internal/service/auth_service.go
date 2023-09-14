@@ -1,9 +1,9 @@
 package service
 
 import (
-	"pbi-btpns-api/exception"
-	"pbi-btpns-api/model"
-	"pbi-btpns-api/repository"
+	"pbi-btpns-api/internal/exception"
+	"pbi-btpns-api/internal/model"
+	"pbi-btpns-api/internal/repository"
 )
 
 type AuthService interface {

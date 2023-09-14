@@ -3,7 +3,7 @@ package repository
 import (
 	"database/sql"
 	"errors"
-	"pbi-btpns-api/entity"
+	"pbi-btpns-api/internal/entity"
 )
 
 type PhotoRepository interface {

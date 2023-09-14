@@ -1,4 +1,4 @@
-package database
+package app
 
 import (
 	"database/sql"
@@ -6,13 +6,8 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
 	"os"
-	"pbi-btpns-api/app"
 	"time"
 )
-
-func init() {
-	app.LoadConfig()
-}
 
 func NewDB() (*sql.DB, error) {
 	var host string
@@ -22,7 +17,7 @@ func NewDB() (*sql.DB, error) {
 	var pass string
 	var sslmode string
 
-	if e := os.Getenv("ENV"); e == "production" {
+	if e := os.Getenv("STAGE"); e == "production" {
 		// db config for production
 		host = viper.Get("database.postgres.host").(string)
 		port = viper.Get("database.postgres.port").(int)

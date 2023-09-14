@@ -3,8 +3,8 @@ package middleware
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"pbi-btpns-api/model"
-	"pbi-btpns-api/service"
+	"pbi-btpns-api/internal/model"
+	"pbi-btpns-api/internal/service"
 	"strings"
 )
 

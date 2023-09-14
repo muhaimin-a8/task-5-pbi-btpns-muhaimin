@@ -1,10 +1,10 @@
 package service
 
 import (
-	"pbi-btpns-api/entity"
-	"pbi-btpns-api/exception"
-	"pbi-btpns-api/model"
-	"pbi-btpns-api/repository"
+	"pbi-btpns-api/internal/entity"
+	exception2 "pbi-btpns-api/internal/exception"
+	"pbi-btpns-api/internal/model"
+	"pbi-btpns-api/internal/repository"
 	"time"
 )
 
@@ -33,12 +33,12 @@ func (u *userServiceImpl) RegisterUser(registerModel model.UserRegisterRequest) 
 
 	err := u.dao.NewUserRepository().VerifyUsernameNotExist(registerModel.Username)
 	if err != nil {
-		panic(exception.InvariantError{Msg: "username already exist"})
+		panic(exception2.InvariantError{Msg: "username already exist"})
 	}
 
 	err = u.dao.NewUserRepository().VerifyEmailNotExist(registerModel.Email)
 	if err != nil {
-		panic(exception.InvariantError{Msg: "email already exist"})
+		panic(exception2.InvariantError{Msg: "email already exist"})
 	}
 
 	user, err := u.dao.NewUserRepository().CreateUser(userEntity)
@@ -65,14 +65,14 @@ func (u *userServiceImpl) UpdateUser(updateModel model.UserUpdateRequest) *model
 
 	userFromDB, err := u.dao.NewUserRepository().GetUserById(userEntity.Id)
 	if err != nil {
-		panic(exception.NotFoundError{Msg: "user id not found"})
+		panic(exception2.NotFoundError{Msg: "user id not found"})
 	}
 
 	// check
 	if userFromDB.Username != userEntity.Username {
 		err := u.dao.NewUserRepository().VerifyUsernameNotExist(updateModel.Username)
 		if err != nil {
-			panic(exception.InvariantError{Msg: "username already exist"})
+			panic(exception2.InvariantError{Msg: "username already exist"})
 		}
 
 	}
@@ -80,7 +80,7 @@ func (u *userServiceImpl) UpdateUser(updateModel model.UserUpdateRequest) *model
 	if userFromDB.Email != userEntity.Email {
 		err = u.dao.NewUserRepository().VerifyEmailNotExist(updateModel.Email)
 		if err != nil {
-			panic(exception.InvariantError{Msg: "email already exist"})
+			panic(exception2.InvariantError{Msg: "email already exist"})
 		}
 
 	}
@@ -100,7 +100,7 @@ func (u *userServiceImpl) UpdateUser(updateModel model.UserUpdateRequest) *model
 func (u *userServiceImpl) DeleteUserById(userId string) {
 	err := u.dao.NewUserRepository().DeleteUserById(userId)
 	if err != nil {
-		panic(exception.NotFoundError{Msg: "userId not found"})
+		panic(exception2.NotFoundError{Msg: "userId not found"})
 	}
 }
 

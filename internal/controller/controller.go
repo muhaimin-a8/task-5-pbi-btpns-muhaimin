@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/go-playground/validator/v10"
-	"pbi-btpns-api/service"
+	service2 "pbi-btpns-api/internal/service"
 )
 
 type Controllers interface {
@@ -14,9 +14,9 @@ type Controllers interface {
 
 type controllerImpl struct {
 	validate     *validator.Validate
-	userService  service.UserService
-	authService  service.AuthService
-	photoService service.PhotoService
+	userService  service2.UserService
+	authService  service2.AuthService
+	photoService service2.PhotoService
 }
 
 func (c *controllerImpl) NewUploadController() UploadController {
@@ -45,9 +45,9 @@ func (c *controllerImpl) NewPhotoController() PhotoController {
 }
 
 func NewController(validate *validator.Validate,
-	userService service.UserService,
-	authService service.AuthService,
-	photoService service.PhotoService) Controllers {
+	userService service2.UserService,
+	authService service2.AuthService,
+	photoService service2.PhotoService) Controllers {
 	return &controllerImpl{
 		validate:     validate,
 		userService:  userService,
