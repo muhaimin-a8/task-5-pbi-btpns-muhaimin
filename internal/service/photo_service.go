@@ -2,7 +2,7 @@ package service
 
 import (
 	"pbi-btpns-api/internal/entity"
-	exception2 "pbi-btpns-api/internal/exception"
+	exception "pbi-btpns-api/internal/exception"
 	"pbi-btpns-api/internal/model"
 	"pbi-btpns-api/internal/repository"
 	"time"
@@ -33,7 +33,7 @@ func (p *photoServiceImpl) AddPhoto(req model.AddPhotoRequest) *model.AddPhotoRe
 
 	addedPhoto, err := p.dao.NewPhotoRepository().AddPhoto(photo)
 	if err != nil {
-		panic(exception2.NotFoundError{Msg: "user id not found"})
+		panic(exception.NotFoundError{Msg: "user id not found"})
 	}
 
 	return &model.AddPhotoResponse{
@@ -47,12 +47,12 @@ func (p *photoServiceImpl) AddPhoto(req model.AddPhotoRequest) *model.AddPhotoRe
 func (p *photoServiceImpl) GetPhotoById(photoId string, userId string) *model.GetPhotoResponse {
 	photo, err := p.dao.NewPhotoRepository().GetPhotoById(photoId)
 	if err != nil {
-		panic(exception2.NotFoundError{Msg: "photoId Not Found"})
+		panic(exception.NotFoundError{Msg: "photoId Not Found"})
 	}
 
 	// check owner
 	if photo.UserId != userId {
-		panic(exception2.AuthorizationError{Msg: "cannot get other photo"})
+		panic(exception.AuthorizationError{Msg: "cannot get other photo"})
 	}
 
 	return &model.GetPhotoResponse{
@@ -75,7 +75,7 @@ func (p *photoServiceImpl) UpdatePhoto(req model.UpdatePhotoRequest) *model.Upda
 
 	photo, err := p.dao.NewPhotoRepository().UpdatePhoto(photoReq)
 	if err != nil {
-		panic(exception2.NotFoundError{Msg: "photoId not found"})
+		panic(exception.NotFoundError{Msg: "photoId not found"})
 	}
 
 	return &model.UpdatePhotoResponse{
@@ -89,17 +89,17 @@ func (p *photoServiceImpl) UpdatePhoto(req model.UpdatePhotoRequest) *model.Upda
 func (p *photoServiceImpl) DeletePhoto(photoId string, userId string) {
 	photo, err := p.dao.NewPhotoRepository().GetPhotoById(photoId)
 	if err != nil {
-		panic(exception2.NotFoundError{Msg: "photoId Not Found"})
+		panic(exception.NotFoundError{Msg: "photoId Not Found"})
 	}
 
 	// check owner
 	if photo.UserId != userId {
-		panic(exception2.AuthorizationError{Msg: "cannot delete other photo"})
+		panic(exception.AuthorizationError{Msg: "cannot delete other photo"})
 	}
 
 	err = p.dao.NewPhotoRepository().DeletePhotoById(photoId)
 	if err != nil {
-		panic(exception2.NotFoundError{Msg: "photoId Not Found"})
+		panic(exception.NotFoundError{Msg: "photoId Not Found"})
 	}
 
 	return
